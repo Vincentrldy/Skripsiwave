@@ -1,4 +1,4 @@
-@extends('layouts/conquer');
+@extends('layouts/conquer')
 
 @section('content') 
 <form method="POST" action="{{ route('categories.update', $data->id) }}">

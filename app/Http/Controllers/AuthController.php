@@ -48,7 +48,7 @@ class AuthController extends Controller
             return redirect('/')->with('success', 'Berhasil login');
         }
 
-        return redirect()->back()->withErrors('Ops, harap cek email atau password Anda');
+        return redirect()->back()->withErrors('Email atau Password Salah');
     }
 
     public function register()

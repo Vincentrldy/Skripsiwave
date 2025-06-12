@@ -101,7 +101,7 @@ class PosController extends Controller
                 'employes_id' => $user->employees->first()->id,
                 'payment_methods_id' => $request->payment_method_id,
                 'customers_id' => $request->customer_id,
-                'total_price' => $request->final_total,
+                'total_price' => $request->total_price,
                 'shipping_cost' => 0,
                 'discount' => $request->discount,
                 'cogs_method' => 'fifo', // Add this required field
