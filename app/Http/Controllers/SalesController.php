@@ -918,4 +918,13 @@ class SalesController extends Controller
             return redirect()->route('sales.index')->with('status', $msg);
         }
     }
+    public function cancel($id)
+    {
+        $sales = Sales::findOrFail($id);
+        $sales->is_cancel = true;
+        $sales->save();
+
+        return redirect()->route('sales.index')->with('status', 'Transaction Sales has been cancelled successfully');
+    }
+
 }

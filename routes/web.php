@@ -93,5 +93,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/pos/{id}', [PosController::class, 'print'])->name('pos.print');
 
     Route::put('/users/{id}/update-role', [App\Http\Controllers\UserController::class, 'updateRole'])->name('update.user.role');
+    Route::post('/cancel/{id}', [SalesController::class, 'cancel'])->name('cancel');
+
 
 });
