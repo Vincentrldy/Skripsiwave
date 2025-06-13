@@ -97,7 +97,8 @@ class ProductController extends Controller
         $salesQuery = DB::table('sales')
             ->select('sales.id', 'sales.noNota', 'sales.date', 'sales.total_price as invoice_total', 
                      'sales.discount', 'sales.shipping_cost', 'sales.cogs_method')
-            ->where('sales.deleted_at', null);
+            ->where('sales.deleted_at', null)
+            ->where('sales.is_cancel', 0); // Only include non-cancelled sales
         
         // Apply invoice search if provided
         if ($searchInvoice) {
@@ -161,7 +162,7 @@ class ProductController extends Controller
                     // For FIFO, get the weighted average cost of inventory at time of sale
                     $fifoRecords = DB::table('product_fifo')
                         ->where('product_id', $detail->product_id)
-                        ->where('purchase_date', '<', $sale->date) // Only consider inventory available at sale time
+                        ->where('purchase_date', '<', value: $sale->date) // Only consider inventory available at sale time
                         ->whereNull('deleted_at')
                         ->orderBy('purchase_date', 'asc')
                         ->select('price', 'stock')

@@ -9,6 +9,7 @@ use App\Models\Payment_Methods;
 use App\Models\Product;
 use App\Models\Sales;
 use App\Models\Sales_detail;
+use App\Models\ProductFifo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
@@ -920,11 +921,36 @@ class SalesController extends Controller
     }
     public function cancel($id)
     {
+        // Ambil data sales
         $sales = Sales::findOrFail($id);
+
+        // Cek apakah sudah dibatalkan sebelumnya
+        if ($sales->is_cancel) {
+            return redirect()->route('sales.index')->with('status', 'Transaction already cancelled');
+        }
+
+        // Ambil semua detail dari penjualan
+        $salesDetails = DB::table('sales_detail')
+                        ->select(
+                   'sales_detail.product_id',
+                            'sales_detail.total_quantity'
+                        )                
+                        ->where('sales_id', $id)->get();
+
+        // Kembalikan stok ke product_fifo
+        foreach ($salesDetails as $detail) {
+            $productFifo = DB::table('product_fifo')
+                           ->where('product_id', $detail->product_id)
+                           ->select('price', 'stock')
+                           ->update(['stock' => DB::raw('stock + ' . $detail->total_quantity)]);
+        }
+
+        // Tandai penjualan sebagai dibatalkan
         $sales->is_cancel = true;
         $sales->save();
 
         return redirect()->route('sales.index')->with('status', 'Transaction Sales has been cancelled successfully');
     }
+
 
 }
