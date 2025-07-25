@@ -80,7 +80,9 @@
                             <th>Total Price</th>
                             <th>Payment Method</th>
                             <th>Shipped Date</th>
+                            <th>Is Cancel</th>
                             <th>Actions</th>
+                            <th>Cancel</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -92,11 +94,20 @@
                                 <td>Rp {{ number_format($sale->total_price, 0, ',', '.') }}</td>
                                 <td>{{ $sale->paymentMethod->name }}</td>
                                 <td>{{ $sale->shipped_date }}</td>
+                                <td>{{$sale->is_cancel ? 'yes' : 'no'}}</td>
                                 <td>
                                     <a href="{{ route('sales.detail', $sale->id) }}" class="btn btn-info btn-sm">
                                         <i class="fas fa-eye"></i>
                                     </a>
                                 </td>
+                                <td>
+                                    <form action="{{ route('cancel', $sale->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin membatalkan pesanan ini?');">
+                                        @csrf
+                                        <button type="submit" class="btn btn-danger btn-sm">
+                                            <i class="fas fa-ban"></i>
+                                        </button>
+                                    </form>
+                                </td> 
                             </tr>
                         @endforeach
                     </tbody>
